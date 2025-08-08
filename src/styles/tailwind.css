@@ -1,0 +1,151 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Core Colors */
+    --color-background: #0E0F1C; /* deep-slate */
+    --color-foreground: #FFFFFF; /* white */
+    --color-border: #1A1B2E; /* elevated-surface */
+    --color-input: #1A1B2E; /* elevated-surface */
+    --color-ring: #00FFFF; /* cyan */
+    
+    /* Card Colors */
+    --color-card: #1A1B2E; /* elevated-surface */
+    --color-card-foreground: #FFFFFF; /* white */
+    
+    /* Popover Colors */
+    --color-popover: #1A1B2E; /* elevated-surface */
+    --color-popover-foreground: #FFFFFF; /* white */
+    
+    /* Muted Colors */
+    --color-muted: #2A2B3E; /* muted-surface */
+    --color-muted-foreground: #A0A3BD; /* muted-purple-gray */
+    
+    /* Primary Colors */
+    --color-primary: #00FFFF; /* cyan */
+    --color-primary-foreground: #0E0F1C; /* deep-slate */
+    
+    /* Secondary Colors */
+    --color-secondary: #6E00FF; /* deep-purple */
+    --color-secondary-foreground: #FFFFFF; /* white */
+    
+    /* Destructive Colors */
+    --color-destructive: #FF4757; /* clear-red */
+    --color-destructive-foreground: #FFFFFF; /* white */
+    
+    /* Accent Colors */
+    --color-accent: #FF6B6B; /* sunset-coral */
+    --color-accent-foreground: #FFFFFF; /* white */
+    
+    /* Success Colors */
+    --color-success: #B6FCD5; /* mint-green */
+    --color-success-foreground: #0E0F1C; /* deep-slate */
+    
+    /* Warning Colors */
+    --color-warning: #FFE066; /* warm-yellow */
+    --color-warning-foreground: #0E0F1C; /* deep-slate */
+    
+    /* Error Colors */
+    --color-error: #FF4757; /* clear-red */
+    --color-error-foreground: #FFFFFF; /* white */
+    
+    /* Gradient Colors */
+    --color-gradient-start: #00FFFF; /* cyan */
+    --color-gradient-end: #6E00FF; /* deep-purple */
+    
+    /* Text Colors */
+    --color-text-primary: #FFFFFF; /* white */
+    --color-text-secondary: #A0A3BD; /* muted-purple-gray */
+    
+    /* Surface Colors */
+    --color-surface: #1A1B2E; /* elevated-surface */
+    --color-surface-hover: #2A2B3E; /* muted-surface */
+    
+    /* Border Radius */
+    --radius: 0.5rem;
+  }
+  
+  * {
+    @apply border-border;
+  }
+  
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+  
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    @apply bg-background;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    @apply bg-muted rounded-full;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-muted-foreground;
+  }
+  
+  /* Neon Glow Effects */
+  .neon-glow {
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+  }
+  
+  .neon-glow-purple {
+    box-shadow: 0 0 20px rgba(110, 0, 255, 0.3);
+  }
+  
+  .neon-glow-coral {
+    box-shadow: 0 0 20px rgba(255, 107, 107, 0.3);
+  }
+  
+  /* Gradient Backgrounds */
+  .gradient-primary {
+    background: linear-gradient(135deg, var(--color-gradient-start) 0%, var(--color-gradient-end) 100%);
+  }
+  
+  .gradient-mesh {
+    background: radial-gradient(circle at 20% 80%, rgba(0, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(110, 0, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(255, 107, 107, 0.05) 0%, transparent 50%);
+  }
+  
+  /* Animation Classes */
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+  
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+  }
+  
+  .animate-pulse-neon {
+    animation: pulse-neon 2s ease-in-out infinite;
+  }
+  
+  @keyframes pulse-neon {
+    0%, 100% { box-shadow: 0 0 20px rgba(0, 255, 255, 0.3); }
+    50% { box-shadow: 0 0 30px rgba(0, 255, 255, 0.5); }
+  }
+  
+  /* Reduced Motion */
+  @media (prefers-reduced-motion: reduce) {
+    .animate-float,
+    .animate-pulse-neon {
+      animation: none;
+    }
+  }
+}
