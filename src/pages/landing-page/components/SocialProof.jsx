@@ -12,7 +12,7 @@ const SocialProof = () => {
       name: 'Sarah Chen',
       role: 'Product Designer',
       company: 'TechFlow',
-      avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face',
+      avatar: 'https://randomuser.me/api/portraits/women/44.jpg',
       content: "OnSplit completely transformed how our team handles shared expenses. The cross-chain payments are seamless and the trust system actually makes splitting bills fun!",
       rating: 5,
       trustScore: 94

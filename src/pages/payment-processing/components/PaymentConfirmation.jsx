@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Icon from '../../../components/AppIcon';
 import Button from '../../../components/ui/Button';
 
@@ -89,7 +89,7 @@ const PaymentConfirmation = ({
       <div className="bg-gradient-primary/10 rounded-lg p-6 border border-primary/20">
         <div className="text-center space-y-4">
           <div className="w-16 h-16 bg-gradient-primary rounded-full flex items-center justify-center mx-auto animate-pulse-neon">
-            <Icon name="CreditCard" size={32} color="#0E0F1C" strokeWidth={2.5} />
+            <Icon name="CreditCard" size={32} color="#3b82f6" strokeWidth={2.5} />
           </div>
           
           <div>

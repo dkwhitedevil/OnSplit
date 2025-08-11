@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Icon from '../../../components/AppIcon';
 import Button from '../../../components/ui/Button';
 
@@ -52,7 +52,7 @@ const PaymentMethodSelector = ({ selectedMethod, onMethodSelect, availableMethod
             <Icon 
               name={methodIcons?.[selectedMethod]} 
               size={24} 
-              color="#0E0F1C" 
+              color="#3b82f6" 
               strokeWidth={2.5} 
             />
           </div>

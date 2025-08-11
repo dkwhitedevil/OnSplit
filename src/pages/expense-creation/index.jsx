@@ -1,21 +1,22 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import Header from '../../components/ui/Header';
-import Navigation from '../../components/ui/Navigation';
-import FloatingActionButton from '../../components/ui/FloatingActionButton';
+import { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import Icon from '../../components/AppIcon';
 import Breadcrumb from '../../components/ui/Breadcrumb';
 import Button from '../../components/ui/Button';
-import Icon from '../../components/AppIcon';
+import FloatingActionButton from '../../components/ui/FloatingActionButton';
+import Header from '../../components/ui/Header';
+import Navigation from '../../components/ui/Navigation';
 
 // Import all components
 import ExpenseDetailsForm from './components/ExpenseDetailsForm';
+
+import PaymentMethodSelector from './components/PaymentMethodSelector';
 import ReceiptUpload from './components/ReceiptUpload';
 import SplitCalculator from './components/SplitCalculator';
-import PaymentMethodSelector from './components/PaymentMethodSelector';
-import ItemizedSplitting from './components/ItemizedSplitting';
 
 const ExpenseCreation = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [currentStep, setCurrentStep] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -39,8 +40,7 @@ const ExpenseCreation = () => {
     { id: 1, title: 'Details', icon: 'Receipt', component: 'details' },
     { id: 2, title: 'Receipt', icon: 'Upload', component: 'receipt' },
     { id: 3, title: 'Split', icon: 'Calculator', component: 'split' },
-    { id: 4, title: 'Items', icon: 'List', component: 'items' },
-    { id: 5, title: 'Payment', icon: 'CreditCard', component: 'payment' }
+    { id: 4, title: 'Payment', icon: 'CreditCard', component: 'payment' }
   ];
 
   useEffect(() => {
@@ -59,6 +59,13 @@ const ExpenseCreation = () => {
   useEffect(() => {
     // Load saved progress
     const savedProgress = localStorage.getItem('expense-creation-progress');
+    let initialStep = 1;
+    // Check for ?step= query param
+    const params = new URLSearchParams(location.search);
+    const stepParam = parseInt(params.get('step'), 10);
+    if (!isNaN(stepParam) && stepParam >= 1 && stepParam <= 5) {
+      initialStep = stepParam;
+    }
     if (savedProgress) {
       try {
         const data = JSON.parse(savedProgress);
@@ -66,14 +73,19 @@ const ExpenseCreation = () => {
         setSplitData(data?.splitData || {});
         setPaymentMethod(data?.paymentMethod || '');
         setItemizedData(data?.itemizedData || []);
-        if (data?.currentStep && data?.currentStep > 1) {
+        if (data?.currentStep && data?.currentStep > 1 && !params.has('step')) {
           setCurrentStep(data?.currentStep);
+        } else {
+          setCurrentStep(initialStep);
         }
       } catch (error) {
         console.error('Error loading saved progress:', error);
+        setCurrentStep(initialStep);
       }
+    } else {
+      setCurrentStep(initialStep);
     }
-  }, []);
+  }, [location.search]);
 
   const handleExpenseChange = (data) => {
     setExpenseData(data);
@@ -93,10 +105,11 @@ const ExpenseCreation = () => {
       date: scanResults?.date || prev?.date
     }));
 
-    // Show success animation
+    // Show success animation, then go to split step
     setIsLoading(true);
     setTimeout(() => {
       setIsLoading(false);
+      setCurrentStep(3); // Go to Split step
     }, 1000);
   };
 
@@ -192,21 +205,12 @@ const ExpenseCreation = () => {
         return (
           <SplitCalculator
             totalAmount={expenseData?.totalAmount}
-            members={[]}
             splitData={splitData}
             onSplitChange={handleSplitChange}
+            onNext={goToNextStep}
           />
         );
       case 4:
-        return (
-          <ItemizedSplitting
-            items={itemizedData}
-            members={[]}
-            onItemsChange={handleItemsChange}
-            totalAmount={expenseData?.totalAmount}
-          />
-        );
-      case 5:
         return (
           <PaymentMethodSelector
             selectedMethod={paymentMethod}
@@ -314,7 +318,7 @@ const ExpenseCreation = () => {
           </div>
 
           {/* Step Content */}
-          <div className="bg-surface rounded-xl border border-border p-6 md:p-8 mb-8">
+          <div className="bg-surface rounded-xl border border-border p-6 md:p-8 mb-8 z-10 relative">
             {renderStepContent()}
           </div>
 
@@ -354,7 +358,6 @@ const ExpenseCreation = () => {
               )}
             </div>
           </div>
-
           {/* Quick Actions */}
           <div className="mt-8 p-4 bg-muted/20 rounded-lg border border-border">
             <div className="flex items-center justify-between">

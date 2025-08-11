@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Icon from '../../../components/AppIcon';
 
 const AmountConfirmation = ({ amount, currency, recipient, description }) => {
@@ -53,7 +53,7 @@ const AmountConfirmation = ({ amount, currency, recipient, description }) => {
               <Icon 
                 name={getCurrencyIcon(currency)} 
                 size={24} 
-                color="#0E0F1C" 
+                color="#3b82f6" 
                 strokeWidth={2.5} 
               />
             </div>
@@ -96,7 +96,7 @@ const AmountConfirmation = ({ amount, currency, recipient, description }) => {
             <span className="text-sm text-text-secondary">To:</span>
             <div className="flex items-center space-x-2">
               <div className="w-6 h-6 bg-gradient-primary rounded-full flex items-center justify-center">
-                <Icon name="User" size={12} color="#0E0F1C" />
+                <Icon name="User" size={12} color="#3b82f6" />
               </div>
               <span className="text-sm font-medium text-foreground">
                 {recipient}
@@ -141,7 +141,7 @@ const AmountConfirmation = ({ amount, currency, recipient, description }) => {
       {/* Security Badge */}
       <div className="flex items-center justify-center space-x-2 p-3 bg-success/10 rounded-lg border border-success/20">
         <div className="w-5 h-5 bg-success rounded-full flex items-center justify-center">
-          <Icon name="Shield" size={12} color="#0E0F1C" strokeWidth={3} />
+          <Icon name="Shield" size={12} color="#3b82f6" strokeWidth={3} />
         </div>
         <span className="text-sm font-medium text-success">
           Secured by blockchain technology

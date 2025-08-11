@@ -1,48 +1,25 @@
-import React, { useState, useEffect } from 'react';
 
+import { useEffect, useState } from 'react';
+import Icon from '../../../components/AppIcon';
 import Input from '../../../components/ui/Input';
 import Select from '../../../components/ui/Select';
-import Icon from '../../../components/AppIcon';
-import Image from '../../../components/AppImage';
 
-const SplitCalculator = ({ totalAmount, members, splitData, onSplitChange }) => {
+const SplitCalculator = ({ totalAmount, splitData, onSplitChange, onNext }) => {
   const [splitMethod, setSplitMethod] = useState('equal');
   const [customSplits, setCustomSplits] = useState({});
   const [isAnimating, setIsAnimating] = useState(false);
-
-  // Mock group members
-  const mockMembers = [
-    {
-      id: 1,
-      name: "Alex Chen",
-      avatar: "https://randomuser.me/api/portraits/men/32.jpg",
-      walletAddress: "0x742d35Cc6634C0532925a3b8D",
-      isCurrentUser: true
-    },
-    {
-      id: 2,
-      name: "Sarah Johnson",
-      avatar: "https://randomuser.me/api/portraits/women/44.jpg",
-      walletAddress: "0x8f3e2b1a9c7d6e5f4a3b2c1d",
-      isCurrentUser: false
-    },
-    {
-      id: 3,
-      name: "Mike Rodriguez",
-      avatar: "https://randomuser.me/api/portraits/men/56.jpg",
-      walletAddress: "0x1a2b3c4d5e6f7a8b9c0d1e2f",
-      isCurrentUser: false
-    },
-    {
-      id: 4,
-      name: "Emma Wilson",
-      avatar: "https://randomuser.me/api/portraits/women/68.jpg",
-      walletAddress: "0x9f8e7d6c5b4a3928374658ab",
-      isCurrentUser: false
-    }
+  const [members, setMembers] = useState([]);
+  const [selectedMembers, setSelectedMembers] = useState([]);
+  const [newMember, setNewMember] = useState({ name: '', walletAddress: '' });
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [selectedAvatar, setSelectedAvatar] = useState(null);
+  const avatarOptions = [
+    'https://api.dicebear.com/7.x/adventurer/svg?seed=girl1',
+    'https://api.dicebear.com/7.x/adventurer/svg?seed=girl2',
+    'https://api.dicebear.com/7.x/adventurer/svg?seed=boy1',
+    'https://api.dicebear.com/7.x/adventurer/svg?seed=boy2',
   ];
-
-  const [selectedMembers, setSelectedMembers] = useState(mockMembers?.map(m => m?.id));
+  const isValidWallet = (address) => /^0x[a-fA-F0-9]{40}$/.test(address);
 
   const splitMethodOptions = [
     { value: 'equal', label: '⚖️ Equal Split', description: 'Split equally among all members' },
@@ -53,7 +30,20 @@ const SplitCalculator = ({ totalAmount, members, splitData, onSplitChange }) => 
 
   useEffect(() => {
     calculateSplit();
-  }, [splitMethod, selectedMembers, totalAmount, customSplits]);
+  }, [splitMethod, selectedMembers, totalAmount, customSplits, members]);
+
+  // Add member handler (now in modal)
+  const handleAddMember = () => {
+    const name = newMember.name.trim();
+    const walletAddress = newMember.walletAddress.trim();
+    if (!name || !isValidWallet(walletAddress) || !selectedAvatar) return;
+    const id = Date.now();
+    setMembers([...members, { id, name, walletAddress, avatar: selectedAvatar }]);
+    setSelectedMembers([...selectedMembers, id]);
+    setNewMember({ name: '', walletAddress: '' });
+    setSelectedAvatar(null);
+    setShowAddModal(false);
+  };
 
   const calculateSplit = () => {
     if (!totalAmount || selectedMembers?.length === 0) return;
@@ -63,7 +53,7 @@ const SplitCalculator = ({ totalAmount, members, splitData, onSplitChange }) => 
     let newSplitData = {};
 
     switch (splitMethod) {
-      case 'equal':
+      case 'equal': {
         const equalAmount = amount / activeMemberIds?.length;
         activeMemberIds?.forEach(memberId => {
           newSplitData[memberId] = {
@@ -72,8 +62,8 @@ const SplitCalculator = ({ totalAmount, members, splitData, onSplitChange }) => 
           };
         });
         break;
-
-      case 'percentage':
+      }
+      case 'percentage': {
         activeMemberIds?.forEach(memberId => {
           const percentage = customSplits?.[memberId]?.percentage || 0;
           newSplitData[memberId] = {
@@ -82,8 +72,8 @@ const SplitCalculator = ({ totalAmount, members, splitData, onSplitChange }) => 
           };
         });
         break;
-
-      case 'amount':
+      }
+      case 'amount': {
         activeMemberIds?.forEach(memberId => {
           const customAmount = customSplits?.[memberId]?.amount || 0;
           newSplitData[memberId] = {
@@ -92,12 +82,11 @@ const SplitCalculator = ({ totalAmount, members, splitData, onSplitChange }) => 
           };
         });
         break;
-
-      case 'weighted':
+      }
+      case 'weighted': {
         const totalWeight = activeMemberIds?.reduce((sum, memberId) => {
           return sum + (customSplits?.[memberId]?.weight || 1);
         }, 0);
-        
         activeMemberIds?.forEach(memberId => {
           const weight = customSplits?.[memberId]?.weight || 1;
           const memberAmount = (amount * weight) / totalWeight;
@@ -107,6 +96,9 @@ const SplitCalculator = ({ totalAmount, members, splitData, onSplitChange }) => 
             weight: weight
           };
         });
+        break;
+      }
+      default:
         break;
     }
 
@@ -156,10 +148,69 @@ const SplitCalculator = ({ totalAmount, members, splitData, onSplitChange }) => 
 
   return (
     <div className="space-y-6">
-      {/* Header */}
+      {/* Add Member Modal */}
+      {showAddModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          {/* Solid black overlay */}
+          <div className="absolute inset-0 bg-blue opacity-10"></div>
+          <div className="relative bg-black p-8 rounded-3xl shadow-2xl w-full max-w-md text-white flex flex-col items-stretch animate-fadeIn" style={{ boxShadow: ' 0 2px 32px 0 #000' }}>
+            <h2 className="text-3xl font-extrabold mb-6 text-center tracking-tight">Add Member</h2>
+            <input
+              type="text"
+              value={newMember.name}
+              onChange={e => setNewMember({ ...newMember, name: e.target.value })}
+              placeholder="Member name"
+              className="w-full px-5 py-3 rounded-xl mb-4 bg-black/60 border border-white/10 focus:ring-2 focus:ring-sky-400 text-lg transition"
+              autoFocus
+            />
+            <input
+              type="text"
+              value={newMember.walletAddress}
+              onChange={e => setNewMember({ ...newMember, walletAddress: e.target.value })}
+              placeholder="Wallet address (0x...)"
+              className={`w-full px-5 py-3 rounded-xl mb-2 bg-black/60 border ${isValidWallet(newMember.walletAddress) ? 'border-sky-400' : 'border-red-500'} focus:ring-2 focus:ring-sky-400 text-lg transition`}
+            />
+            {!isValidWallet(newMember.walletAddress) && newMember.walletAddress.length > 0 && (
+              <p className="text-red-400 text-sm mb-2">Invalid wallet address format</p>
+            )}
+            <p className="text-base mb-2 font-medium">Choose Profile Icon</p>
+            <div className="flex gap-4 mb-6 justify-center">
+              {avatarOptions.map((avatar, idx) => (
+                <img
+                  key={idx}
+                  src={avatar}
+                  alt="avatar"
+                  onClick={() => setSelectedAvatar(avatar)}
+                  className={`w-14 h-14 rounded-full cursor-pointer border-4 ${selectedAvatar === avatar ? 'border-sky-400 shadow-[0_0_16px_2px_#0ea5e9]' : 'border-transparent'} transition-transform duration-300 hover:scale-110`}
+                  style={{ background: '#18181b' }}
+                />
+              ))}
+            </div>
+            <div className="flex justify-end gap-4 mt-2">
+              <button
+                onClick={() => setShowAddModal(false)}
+                className="px-5 py-2 rounded-xl bg-gray-700 hover:bg-gray-800 text-white font-semibold transition"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleAddMember}
+                disabled={!(newMember.name && isValidWallet(newMember.walletAddress) && selectedAvatar)}
+                className="px-6 py-2 rounded-xl font-bold text-white bg-sky-500 shadow-[0_0_16px_2px_#0ea5e9] hover:bg-sky-400 hover:shadow-[0_0_24px_4px_#0ea5e9] transition-all duration-300 disabled:opacity-50 focus:ring-2 focus:ring-sky-400 focus:outline-none"
+                style={{ boxShadow: '0 0 16px 2px #0ea5e9' }}
+              >
+                Add
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {/* Members Section */}
+      
+  {/* ...existing code... */}
       <div className="flex items-center space-x-3">
         <div className="w-10 h-10 bg-gradient-primary rounded-lg flex items-center justify-center">
-          <Icon name="Calculator" size={20} color="#0E0F1C" />
+          <Icon name="Calculator" size={20} color="#3c8ad3ff" />
         </div>
         <div>
           <h2 className="text-xl font-space-grotesk font-bold text-foreground">
@@ -178,59 +229,83 @@ const SplitCalculator = ({ totalAmount, members, splitData, onSplitChange }) => 
         onChange={setSplitMethod}
         className="transition-all duration-300 focus-within:scale-[1.02]"
       />
-      {/* Member Selection */}
-      <div className="space-y-4">
-        <h3 className="text-lg font-medium text-foreground">
-          Select Members ({selectedMembers?.length})
-        </h3>
-        
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          {mockMembers?.map((member) => {
-            const isSelected = selectedMembers?.includes(member?.id);
-            return (
-              <button
-                key={member?.id}
-                onClick={() => toggleMember(member?.id)}
-                className={`relative p-3 rounded-lg border-2 transition-all duration-300 hover:scale-105 ${
-                  isSelected
-                    ? 'border-primary bg-primary/10 shadow-neon'
-                    : 'border-border bg-surface hover:border-primary/30'
-                }`}
-              >
-                <div className="flex flex-col items-center space-y-2">
-                  <div className="relative">
-                    <div className="w-12 h-12 rounded-full overflow-hidden">
-                      <Image
-                        src={member?.avatar}
-                        alt={member?.name}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    {member?.isCurrentUser && (
-                      <div className="absolute -top-1 -right-1 w-5 h-5 bg-primary rounded-full flex items-center justify-center">
-                        <Icon name="User" size={12} color="#0E0F1C" />
-                      </div>
-                    )}
-                    {isSelected && (
-                      <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-success rounded-full flex items-center justify-center animate-pulse">
-                        <Icon name="Check" size={12} color="#0E0F1C" />
-                      </div>
-                    )}
-                  </div>
-                  <div className="text-center">
-                    <p className="text-sm font-medium text-foreground truncate">
-                      {member?.name}
-                    </p>
-                    <p className="text-xs text-text-secondary font-roboto-mono">
-                      {member?.walletAddress?.slice(0, 6)}...{member?.walletAddress?.slice(-4)}
-                    </p>
-                  </div>
-                </div>
-              </button>
-            );
-          })}
+      {members.length === 0 ? (
+        <div className="flex flex-col items-center justify-center py-10">
+          <p className="text-text-secondary text-lg mt-4">No members yet</p>
+          <button
+            onClick={() => setShowAddModal(true)}
+            className="mt-6 px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold rounded-lg shadow-lg hover:scale-105 transform transition-all duration-300"
+          >
+            ➕ Add Member
+          </button>
         </div>
-      </div>
+      ) : (
+        <div className="flex flex-wrap gap-3 mb-4">
+          {members.map((member) => (
+            <div
+              key={member.id}
+              className="flex items-center gap-3 px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-full shadow-lg transform hover:scale-105 transition-all duration-300 animate-scaleIn"
+              style={{ animation: 'scaleIn 0.3s' }}
+            >
+              <img src={member.avatar} alt={member.name} className="w-8 h-8 rounded-full border-2 border-white" />
+              <span>{member.name}</span>
+              <button
+                onClick={() => {
+                  setMembers(members.filter(m => m.id !== member.id));
+                  setSelectedMembers(selectedMembers.filter(id => id !== member.id));
+                }}
+                className="ml-2 text-red-200 hover:text-red-400 font-bold"
+              >
+                ×
+              </button>
+            </div>
+          ))}
+          <button
+            onClick={() => setShowAddModal(true)}
+            className="px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold rounded-lg shadow-lg hover:scale-105 transform transition-all duration-300"
+          >
+            ➕ Add Member
+          </button>
+        </div>
+      )}
+      {members.length > 0 && (
+        <div className="space-y-4">
+          <h3 className="text-lg font-medium text-foreground">
+            Select Members ({selectedMembers?.length})
+          </h3>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            {members.map((member, idx) => {
+              const memberId = member.id;
+              const isSelected = selectedMembers.includes(memberId);
+              return (
+                <button
+                  key={memberId}
+                  onClick={() => toggleMember(memberId)}
+                  className={`relative p-4 rounded-xl border-2 transition-all duration-300 font-semibold text-base shadow hover:scale-105 ${
+                    isSelected
+                      ? 'border-pink-500 bg-pink-500/10 shadow-neon'
+                      : 'border-border bg-surface hover:border-pink-500/30'
+                  }`}
+                  style={{ minHeight: 60 }}
+                >
+                  <div className="flex flex-col items-center">
+                    <img src={member.avatar} alt={member.name} className="w-10 h-10 rounded-full border-2 border-pink-500 mb-1" />
+                    <span className="text-lg text-primary font-bold mb-1">{member.name}</span>
+                    <span className="text-xs text-text-secondary font-roboto-mono bg-primary/10 px-2 py-1 rounded">
+                      {member.walletAddress.slice(0,6)}...{member.walletAddress.slice(-4)}
+                    </span>
+                  </div>
+                  {isSelected && (
+                    <div className="absolute top-2 right-2 w-5 h-5 bg-success rounded-full flex items-center justify-center animate-pulse">
+                      <Icon name="Check" size={12} color="#0E0F1C" />
+                    </div>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
       {/* Custom Split Inputs */}
       {splitMethod !== 'equal' && selectedMembers?.length > 0 && (
         <div className="space-y-4">
@@ -240,21 +315,16 @@ const SplitCalculator = ({ totalAmount, members, splitData, onSplitChange }) => 
           
           <div className="space-y-3">
             {selectedMembers?.map((memberId) => {
-              const member = mockMembers?.find(m => m?.id === memberId);
+              const member = members?.find((m, idx) => (m?.id ?? idx) === memberId);
               if (!member) return null;
 
               return (
                 <div
                   key={memberId}
-                  className="flex items-center space-x-3 p-3 bg-surface rounded-lg border border-border"
+                  className="flex items-center space-x-3 p-3 bg-surface rounded-lg border border-border animate-scaleIn"
+                  style={{ animation: 'scaleIn 0.3s' }}
                 >
-                  <div className="w-8 h-8 rounded-full overflow-hidden flex-shrink-0">
-                    <Image
-                      src={member?.avatar}
-                      alt={member?.name}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
+                  <img src={member.avatar} alt={member.name} className="w-8 h-8 rounded-full border-2 border-pink-500" />
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-foreground truncate">
                       {member?.name}
@@ -270,7 +340,6 @@ const SplitCalculator = ({ totalAmount, members, splitData, onSplitChange }) => 
                         className="w-20 text-center"
                       />
                     )}
-                    
                     {splitMethod === 'amount' && (
                       <Input
                         type="number"
@@ -280,7 +349,6 @@ const SplitCalculator = ({ totalAmount, members, splitData, onSplitChange }) => 
                         className="w-24 text-center"
                       />
                     )}
-                    
                     {splitMethod === 'weighted' && (
                       <Input
                         type="number"
@@ -290,7 +358,6 @@ const SplitCalculator = ({ totalAmount, members, splitData, onSplitChange }) => 
                         className="w-16 text-center"
                       />
                     )}
-
                     <span className="text-xs text-text-secondary min-w-[40px]">
                       {splitMethod === 'percentage' && '%'}
                       {splitMethod === 'amount' && '$'}
@@ -326,22 +393,17 @@ const SplitCalculator = ({ totalAmount, members, splitData, onSplitChange }) => 
 
           <div className="space-y-2">
             {Object.entries(splitData)?.map(([memberId, split]) => {
-              const member = mockMembers?.find(m => m?.id === parseInt(memberId));
+              const member = members?.find((m, idx) => (m?.id ?? idx) === (isNaN(memberId) ? memberId : parseInt(memberId)));
               if (!member) return null;
 
               return (
                 <div
                   key={memberId}
-                  className="flex items-center justify-between p-3 bg-surface rounded-lg border border-border hover:border-primary/30 transition-all duration-300"
+                  className="flex items-center justify-between p-3 bg-surface rounded-lg border border-border hover:border-pink-500/30 transition-all duration-300 animate-scaleIn"
+                  style={{ animation: 'scaleIn 0.3s' }}
                 >
                   <div className="flex items-center space-x-3">
-                    <div className="w-8 h-8 rounded-full overflow-hidden">
-                      <Image
-                        src={member?.avatar}
-                        alt={member?.name}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
+                    <img src={member.avatar} alt={member.name} className="w-8 h-8 rounded-full border-2 border-pink-500" />
                     <div>
                       <p className="text-sm font-medium text-foreground">
                         {member?.name}
@@ -389,6 +451,18 @@ const SplitCalculator = ({ totalAmount, members, splitData, onSplitChange }) => 
         <div className="w-2 h-2 bg-primary rounded-full"></div>
         <div className="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
         <div className="w-2 h-2 bg-muted rounded-full"></div>
+      </div>
+
+      {/* Next Button */}
+      <div className="flex justify-end pt-6">
+        <button
+          type="button"
+          className="px-8 py-3 rounded-xl font-bold text-white bg-gradient-to-r from-sky-500 to-blue-600 shadow-lg hover:scale-105 hover:shadow-xl transition-all duration-300 disabled:opacity-50 focus:ring-2 focus:ring-sky-400 focus:outline-none"
+          disabled={members.length === 0 || !isBalanced()}
+          onClick={onNext}
+        >
+          Next
+        </button>
       </div>
     </div>
   );

@@ -39,6 +39,13 @@ const LandingPage = () => {
     }
   }, []);
 
+  // Redirect to dashboard when authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/dashboard');
+    }
+  }, [isAuthenticated, navigate]);
+
   const handleWalletConnect = async (walletType) => {
     setWalletConnecting(true);
     
@@ -165,7 +172,7 @@ const LandingPage = () => {
             {/* Logo */}
             <div className="flex items-center space-x-3">
               <div className="w-10 h-10 bg-gradient-primary rounded-xl flex items-center justify-center neon-glow">
-                <Icon name="Zap" size={20} className="text-slate" />
+                <Icon name="Zap" color="#3b82f6" size={20} className="text-slate" />
               </div>
               <span className="text-2xl font-space-grotesk font-bold text-foreground">
                 OnSplit
@@ -173,17 +180,7 @@ const LandingPage = () => {
             </div>
             
             {/* Navigation Links */}
-            <nav className="hidden md:flex items-center space-x-8">
-              <a href="#features" className="text-text-secondary hover:text-primary transition-colors">
-                Features
-              </a>
-              <a href="#social-proof" className="text-text-secondary hover:text-primary transition-colors">
-                Community
-              </a>
-              <a href="#auth-section" className="text-text-secondary hover:text-primary transition-colors">
-                Connect Wallet
-              </a>
-            </nav>
+           
             
             {/* Action Buttons */}
             <div className="flex items-center space-x-3">
@@ -199,14 +196,6 @@ const LandingPage = () => {
                 </Button>
               ) : (
                 <>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => document?.getElementById('auth-section')?.scrollIntoView({ behavior: 'smooth' })}
-                    className="hidden sm:inline-flex"
-                  >
-                    Sign In
-                  </Button>
                   <Button
                     size="sm"
                     onClick={handleGetStarted}
@@ -263,7 +252,7 @@ const LandingPage = () => {
             <div className="col-span-1 md:col-span-2">
               <div className="flex items-center space-x-3 mb-4">
                 <div className="w-8 h-8 bg-gradient-primary rounded-lg flex items-center justify-center">
-                  <Icon name="Zap" size={16} className="text-slate" />
+                  <Icon name="Zap" color="#3b82f6" size={16} className="text-slate" />
                 </div>
                 <span className="text-xl font-space-grotesk font-bold text-foreground">
                   OnSplit

@@ -69,7 +69,7 @@ const QuickActions = () => {
       {/* Header */}
       <div className="flex items-center space-x-3 mb-6 relative z-10">
         <div className="w-10 h-10 bg-gradient-primary rounded-lg flex items-center justify-center neon-glow">
-          <Icon name="Zap" size={20} color="#0E0F1C" strokeWidth={2.5} />
+          <Icon name="Zap" size={20}  color="#3b82f6" strokeWidth={2.5} />
         </div>
         <div>
           <h2 className="text-lg font-space-grotesk font-bold text-foreground">Quick Actions</h2>

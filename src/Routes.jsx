@@ -1,15 +1,15 @@
-import React from "react";
-import { BrowserRouter, Routes as RouterRoutes, Route } from "react-router-dom";
-import ScrollToTop from "components/ScrollToTop";
+import '@reown/appkit';
 import ErrorBoundary from "components/ErrorBoundary";
+import ScrollToTop from "components/ScrollToTop";
 import NotFound from "pages/NotFound";
-import LandingPage from './pages/landing-page';
-import GroupManagement from './pages/group-management';
+import { BrowserRouter, Route, Routes as RouterRoutes } from "react-router-dom";
 import Dashboard from './pages/dashboard';
-import GroupActivityFeed from './pages/group-activity-feed';
 import ExpenseCreation from './pages/expense-creation';
-import ProfileSettings from './pages/profile-settings';
+import GroupActivityFeed from './pages/group-activity-feed';
+import GroupManagement from './pages/group-management';
+import LandingPage from './pages/landing-page';
 import PaymentProcessing from './pages/payment-processing';
+import ProfileSettings from './pages/profile-settings';
 
 const Routes = () => {
   return (
@@ -18,8 +18,8 @@ const Routes = () => {
       <ScrollToTop />
       <RouterRoutes>
         {/* Define your route here */}
-        <Route path="/" element={<Dashboard />} />
-        <Route path="/landing-page" element={<LandingPage />} />
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/group-management" element={<GroupManagement />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/group-activity-feed" element={<GroupActivityFeed />} />

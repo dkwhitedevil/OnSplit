@@ -142,7 +142,7 @@ const HeroSection = ({ onGetStarted, isAuthenticated }) => {
                   <div className="absolute inset-0 bg-gradient-primary rounded-3xl blur-xl opacity-30" />
                   
                   {/* Main icon */}
-                  <Icon name="Users" size={64} className="text-slate relative z-10" />
+                  <Icon name="Users" size={64} className="text-blue-500 relative z-10" />
                   
                   {/* Floating elements */}
                   {[...Array(6)]?.map((_, i) => (

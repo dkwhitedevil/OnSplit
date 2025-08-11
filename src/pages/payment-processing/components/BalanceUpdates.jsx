@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Icon from '../../../components/AppIcon';
 
 const BalanceUpdates = ({ 
@@ -74,7 +74,7 @@ const BalanceUpdates = ({
               <Icon 
                 name={getCurrencyIcon(currency)} 
                 size={32} 
-                color="#0E0F1C" 
+                color="#3b82f6" 
                 strokeWidth={2.5} 
               />
             </div>

@@ -1,18 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Icon from '../../components/AppIcon';
+import Breadcrumb from '../../components/ui/Breadcrumb';
+import Button from '../../components/ui/Button';
+import FloatingActionButton from '../../components/ui/FloatingActionButton';
 import Header from '../../components/ui/Header';
 import Navigation from '../../components/ui/Navigation';
-import FloatingActionButton from '../../components/ui/FloatingActionButton';
-import Breadcrumb from '../../components/ui/Breadcrumb';
-import PaymentMethodSelector from './components/PaymentMethodSelector';
 import AmountConfirmation from './components/AmountConfirmation';
-import NetworkFeeEstimation from './components/NetworkFeeEstimation';
-import TransactionProgress from './components/TransactionProgress';
-import CrossChainRouting from './components/CrossChainRouting';
-import PaymentConfirmation from './components/PaymentConfirmation';
 import BalanceUpdates from './components/BalanceUpdates';
-import Icon from '../../components/AppIcon';
-import Button from '../../components/ui/Button';
+import CrossChainRouting from './components/CrossChainRouting';
+import NetworkFeeEstimation from './components/NetworkFeeEstimation';
+import PaymentConfirmation from './components/PaymentConfirmation';
+import PaymentMethodSelector from './components/PaymentMethodSelector';
+import TransactionProgress from './components/TransactionProgress';
 
 const PaymentProcessing = () => {
   const navigate = useNavigate();
@@ -255,7 +255,7 @@ const PaymentProcessing = () => {
           <div className="mb-8">
             <div className="flex items-center space-x-3 mb-4">
               <div className="w-12 h-12 bg-gradient-primary rounded-lg flex items-center justify-center">
-                <Icon name="CreditCard" size={24} color="#0E0F1C" strokeWidth={2.5} />
+                <Icon name="CreditCard" size={24} color="#3b82f6" strokeWidth={2.5} />
               </div>
               <div>
                 <h1 className="text-2xl md:text-3xl font-space-grotesk font-bold text-foreground">

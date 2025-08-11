@@ -2,13 +2,14 @@
   "name": "onsplit",
   "version": "0.1.0",
   "private": true,
-  
-  
   "dependencies": {
     "@dhiwise/component-tagger": "^1.0.10",
     "@radix-ui/react-slot": "^1.2.3",
     "@reduxjs/toolkit": "^2.6.1",
+    "@reown/appkit": "^1.7.18",
+    "@reown/appkit-adapter-wagmi": "^1.7.18",
     "@tailwindcss/forms": "^0.5.7",
+    "@tanstack/react-query": "^5.84.2",
     "@testing-library/jest-dom": "^5.15.1",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
@@ -31,7 +32,9 @@
     "tailwind-merge": "^3.3.1",
     "tailwindcss-animate": "^1.0.7",
     "tailwindcss-elevation": "^2.0.0",
-    "tailwindcss-fluid-type": "^2.0.7"
+    "tailwindcss-fluid-type": "^2.0.7",
+    "viem": "^2.33.3",
+    "wagmi": "^2.16.2"
   },
   "scripts": {
     "start": "vite",

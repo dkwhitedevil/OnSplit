@@ -1,4 +1,3 @@
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Icon from '../../../components/AppIcon';
 import Image from '../../../components/AppImage';
@@ -40,27 +39,31 @@ const GroupCard = ({ group }) => {
       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-secondary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
       {/* Header */}
       <div className="flex items-start justify-between mb-4 relative z-10">
-        <div className="flex items-center space-x-3">
-          <div className="relative">
-            <div className="w-12 h-12 bg-gradient-primary rounded-xl flex items-center justify-center neon-glow">
-              <Icon name={group?.icon} size={20} color="#0E0F1C" strokeWidth={2.5} />
-            </div>
-            {group?.hasNewActivity && (
-              <div className="absolute -top-1 -right-1 w-4 h-4 bg-accent rounded-full border-2 border-background animate-pulse"></div>
-            )}
-          </div>
-          <div>
-            <h3 className="font-space-grotesk font-bold text-foreground group-hover:text-primary transition-colors duration-200">
-              {group?.name}
-            </h3>
-            <p className="text-sm text-text-secondary">{group?.memberCount} members</p>
-          </div>
-        </div>
-        
-        <div className={`px-3 py-1 rounded-full text-xs font-medium border ${getStatusColor(group?.status)}`}>
-          {group?.status?.charAt(0)?.toUpperCase() + group?.status?.slice(1)}
-        </div>
+  <div className="flex items-center space-x-3">
+    <div className="relative">
+      <div className="w-12 h-12 bg-gradient-primary rounded-xl flex items-center justify-center neon-glow">
+        <Icon name={group?.icon} size={20} color="#3b82f6" strokeWidth={2.5} />
       </div>
+    </div>
+    <div>
+      <h3 className="font-space-grotesk font-bold text-foreground group-hover:text-primary transition-colors duration-200">
+        {group?.name}
+      </h3>
+      <p className="text-sm text-text-secondary">{group?.memberCount} members</p>
+    </div>
+  </div>
+  <div className="flex flex-col items-end space-y-1 min-w-[70px]">
+    <div className={`px-3 py-1 rounded-full text-xs font-medium border ${getStatusColor(group?.status)}`}>
+      {group?.status?.charAt(0)?.toUpperCase() + group?.status?.slice(1)}
+    </div>
+    {group?.hasNewActivity && (
+      <div className="flex items-center space-x-1 bg-accent/20 rounded-full px-2 py-1 mt-1">
+        <div className="w-2 h-2 bg-accent rounded-full animate-pulse"></div>
+        <span className="text-xs text-accent font-medium">New</span>
+      </div>
+    )}
+  </div>
+</div>
       {/* Member Avatars */}
       <div className="flex items-center space-x-2 mb-4 relative z-10">
         <div className="flex -space-x-2">
@@ -148,13 +151,7 @@ const GroupCard = ({ group }) => {
           className="hover:bg-surface"
         />
       </div>
-      {/* Recent Activity Indicator */}
-      {group?.hasNewActivity && (
-        <div className="absolute top-4 right-4 flex items-center space-x-1 bg-accent/20 rounded-full px-2 py-1">
-          <div className="w-2 h-2 bg-accent rounded-full animate-pulse"></div>
-          <span className="text-xs text-accent font-medium">New</span>
-        </div>
-      )}
+  {/* Recent Activity Indicator removed to prevent duplicate 'New' badge */}
     </div>
   );
 };

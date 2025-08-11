@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Icon from '../../../components/AppIcon';
 
 const BalanceCard = () => {
@@ -75,7 +75,7 @@ const BalanceCard = () => {
       <div className="flex items-center justify-between mb-6 relative z-10">
         <div className="flex items-center space-x-3">
           <div className="w-10 h-10 bg-gradient-primary rounded-lg flex items-center justify-center neon-glow">
-            <Icon name="Wallet" size={20} color="#0E0F1C" strokeWidth={2.5} />
+            <Icon name="Wallet" size={20} color="#3b82f6" strokeWidth={2.5} />
           </div>
           <div>
             <h2 className="text-lg font-space-grotesk font-bold text-foreground">Balance Overview</h2>
@@ -104,7 +104,7 @@ const BalanceCard = () => {
         <div className="bg-surface/50 rounded-lg p-4 border border-border/50 hover:border-success/30 transition-all duration-300 group">
           <div className="flex items-center space-x-3 mb-2">
             <div className="w-8 h-8 bg-success/20 rounded-lg flex items-center justify-center">
-              <Icon name="TrendingUp" size={16} className="text-success" />
+              <Icon name="TrendingUp"  color="#3b82f6" size={16} className="text-success" />
             </div>
             <span className="text-sm font-medium text-text-secondary">You're Owed</span>
           </div>
@@ -159,7 +159,7 @@ const BalanceCard = () => {
           <span className="text-sm text-text-secondary">Last updated: Just now</span>
         </div>
         <button className="flex items-center space-x-2 text-sm text-primary hover:text-primary/80 transition-colors duration-200">
-          <Icon name="RefreshCw" size={16} />
+          <Icon name="RefreshCw"  color="#3b82f6" size={16} />
           <span>Refresh</span>
         </button>
       </div>

@@ -1,17 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Icon from '../../components/AppIcon';
+import Breadcrumb from '../../components/ui/Breadcrumb';
+import Button from '../../components/ui/Button';
+import FloatingActionButton from '../../components/ui/FloatingActionButton';
 import Header from '../../components/ui/Header';
 import Navigation from '../../components/ui/Navigation';
-import FloatingActionButton from '../../components/ui/FloatingActionButton';
-import Breadcrumb from '../../components/ui/Breadcrumb';
+import ActivityTimeline from './components/ActivityTimeline';
 import BalanceCard from './components/BalanceCard';
 import GroupCard from './components/GroupCard';
-import ActivityTimeline from './components/ActivityTimeline';
 import QuickActions from './components/QuickActions';
-import TrustMeter from './components/TrustMeter';
 import StatsOverview from './components/StatsOverview';
-import Icon from '../../components/AppIcon';
-import Button from '../../components/ui/Button';
+import TrustMeter from './components/TrustMeter';
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -181,7 +181,7 @@ const Dashboard = () => {
       <Header />
       <Navigation />
       <FloatingActionButton />
-      <main className="pt-32 md:pt-28 pb-20 md:pb-6 px-4 lg:px-6">
+     <main className="pt-48 md:pt-40 pb-20 md:pb-6 px-4 lg:px-6">
         <div className="max-w-7xl mx-auto">
           <Breadcrumb />
           
